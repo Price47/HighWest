@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>High West Uploader</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
+    <script src="https://use.fontawesome.com/8265947dd0.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
 </head>
 <body>
-    Price is Rad
+    <div id="header"></div>
+    <div id="content">
+    {% block content %}{% endblock %}
+</div>
 </body>
 </html>

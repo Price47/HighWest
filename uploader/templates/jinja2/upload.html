@@ -1,0 +1,12 @@
+{% extends "jinja2/index.html" %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label class="upload-btn">
+      Upload File<input type="file" name="file">
+    </label>
+
+    <button class="upload-btn" type="submit">Upload</button>
+  </form>
+{% endblock %}
