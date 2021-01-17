@@ -19,6 +19,12 @@ body {
     border-bottom: 3px #30ffc8 solid;
 }
 
+#header h1 {
+    position: relative;
+    float: right;
+    margin-right: 15px;
+}
+
 #content {
     margin-top: 100px;
     height: 100%;

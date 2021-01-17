@@ -10,6 +10,7 @@ class Customer(models.Model):
 
 class Transaction(models.Model):
     id = models.IntegerField(primary_key=True, auto_created=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     purchase_status = models.CharField(max_length=16)
     product_id = models.IntegerField()
     product_name = models.CharField(max_length=1024)
