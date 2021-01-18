@@ -55,13 +55,19 @@ class UploadHelper:
                 raise ValidationError(err_msg)
 
 
-        new_purchases = Transaction.objects.filter(
-                           product_id=t['product_id'],
-                           customer_id=Customer.objects.get(id=c_id),
-                           purchase_status='new')
+        if t['purchase_status'] == 'canceled':
+            try:
+                cus = Customer.objects.get(id=c_id)
+            except Customer.DoesNotExist:
+                raise ValidationError("User has not started a subscription yet")
 
-        if not new_purchases and t['purchase_status'] == 'canceled':
-            raise ValidationError("Cannot cancel a purchase that has not already been started")
+            new_purchases = Transaction.objects.filter(
+                               product_id=t['product_id'],
+                               customer_id=cus,
+                               purchase_status='new')
+
+            if not new_purchases:
+                raise ValidationError("Cannot cancel a purchase that has not already been started")
 
     def upsert_customer(self, c):
         """
@@ -70,10 +76,7 @@ class UploadHelper:
         :return:
         """
         cus = Customer.objects.filter(id=c['id'])
-        if not cus:
-            cus = Customer.objects.create(**c)
-
-        customer = cus.first()
+        customer = Customer.objects.create(**c) if not cus else cus.first()
 
         if customer.street_address != c['street_address']:
             customer.street_address = c['street_address']
