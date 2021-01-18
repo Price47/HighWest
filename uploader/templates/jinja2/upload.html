@@ -1,12 +1,25 @@
 {% extends "jinja2/index.html" %}
 
 {% block content %}
-  <form method="post" enctype="multipart/form-data">
+<div class="container">
+  <form method="post" enctype="multipart/form-data" class="row">
     {% csrf_token %}
-    <label class="upload-btn">
-      Upload File<input type="file" name="file">
+    <label class="upload-btn" style="background: #2478ff; margin-bottom: 15px;">
+      <input type="file" name="file">
     </label>
 
     <button class="upload-btn" type="submit">Upload</button>
   </form>
+  {% if errors %}
+    <span class="row" style="margin-top: 25px;">
+        <h3 class="error-header"> The following transactions could not be processed: </h3>
+    </span>
+    {% for error in errors %}
+      <span class="row error-msg">
+        <b> {{error.err}} </b> <i>{{error.transaction}}</i>
+      </span>
+    {% endfor %}
+  {% endif %}
+</div>
+
 {% endblock %}

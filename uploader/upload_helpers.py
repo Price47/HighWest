@@ -1,6 +1,10 @@
 from .models import Customer, Transaction
 
 
+class ValidationError(Exception):
+    __name__ = 'TransactionValidationError'
+
+
 class UploadHelper:
 
     def __init__(self, line_data):
@@ -30,10 +34,33 @@ class UploadHelper:
 
         return customer, transaction
 
-    def _handle_new_customer_address(self, cus, c):
-        if cus.street_address != c['street_address']:
-            cus.street_address = c['street_address']
+    def _transaction_string(self, t):
+        """
+        For use before creating the model, which has the str rep in it
+        :return:
+        """
 
+        return (f'Transaction with product id [{t["product_id"]}]\n'
+                f'{t["product_name"]} purhcased for {t["purchase_amount"]} on {t["transaction_date"]}')
+
+    def _validate_transaction(self, t, c_id):
+        simple_validations = [
+            (lambda t: float(t['purchase_amount']) >= 0, f'Purchase amount {t["purchase_amount"]} is negative'),
+            (lambda t: t['purchase_status'].lower() in ('new', 'canceled'),
+                        f'Purchase type \'{t["purchase_status"]}\' is unrecognized')
+        ]
+
+        for err_check, err_msg in simple_validations:
+            if not err_check(t):
+                raise ValidationError(err_msg)
+
+
+        new_purchases = Transaction.objects.filter(product_id=t['product_id'],
+                           customer_id=Customer.objects.get(id=c_id),
+                           purchase_status='new').all()
+
+        if not new_purchases and t['purchase_status'] == 'canceled':
+            raise ValidationError("Cannot cancel a purchase that has not already been started")
 
     def upsert_customer(self, c):
         """
@@ -63,6 +90,12 @@ class UploadHelper:
         :return:
         """
         c, t = self.parse_line_data()
+
+        try:
+            self._validate_transaction(t, c['id'])
+        except ValidationError as e:
+            return (self._transaction_string(t), str(e))
+
         # Insert new customer if there is no entry in our db before creating the transaction
         # and linking to associated customer
         cus = self.upsert_customer(c)

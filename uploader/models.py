@@ -16,3 +16,7 @@ class Transaction(models.Model):
     product_name = models.CharField(max_length=1024)
     purchase_amount = models.FloatField()
     transaction_date = models.DateTimeField()
+
+    def __str__(self):
+        return (f'Transaction with product id [{self.product_id}]\n'
+                f'{self.product_name} purhcased for {self.purchase_amount} on {self.transaction_date}')

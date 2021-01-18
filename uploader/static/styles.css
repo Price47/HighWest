@@ -1,6 +1,7 @@
 /*
 #30ffc8 - cyan
 #2478ff - blue
+#fc3030 - red
 
 
 */
@@ -42,4 +43,18 @@ body {
 .upload-btn:hover{
     color: white;
     cursor: pointer;
+}
+
+.error-header {
+    background: #fc3030;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+}
+
+.error-msg {
+    background: #ddd;
+    border-bottom: #fc3030 2px solid;
+    border-radius: 5px;
+    margin-bottom: 5px;
 }
