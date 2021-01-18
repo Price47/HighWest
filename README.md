@@ -1,7 +1,7 @@
 HighWest
 ========
 
-###Setup
+##Setup
 with HighWest as the root directory:
  
 - install the requirements
@@ -21,7 +21,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-###Running the app
+##Running the app
 
 Once everything is initialized, you can run it locally with
 ```
