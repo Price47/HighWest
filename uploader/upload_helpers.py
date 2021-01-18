@@ -55,9 +55,10 @@ class UploadHelper:
                 raise ValidationError(err_msg)
 
 
-        new_purchases = Transaction.objects.filter(product_id=t['product_id'],
+        new_purchases = Transaction.objects.filter(
+                           product_id=t['product_id'],
                            customer_id=Customer.objects.get(id=c_id),
-                           purchase_status='new').all()
+                           purchase_status='new')
 
         if not new_purchases and t['purchase_status'] == 'canceled':
             raise ValidationError("Cannot cancel a purchase that has not already been started")
